@@ -1,41 +1,49 @@
 {
   "project_info": {
-    "project_number": "835925278542",
-    "project_id": "animeverse-90985",
-    "storage_bucket": "animeverse-90985.firebasestorage.app"
+    "project_number": "677839630280",
+    "project_id": "animeverse-431f6",
+    "storage_bucket": "animeverse-431f6.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:835925278542:android:8f162fabd7dde91c81a81f",
+        "mobilesdk_app_id": "1:677839630280:android:eb117f795c660eaa791afd",
         "android_client_info": {
-          "package_name": "com.example.animeverse_2"
+          "package_name": "com.example.animeverse"
         }
       },
       "oauth_client": [
         {
-          "client_id": "835925278542-1sc3mfarcsjoid04bci8kdt1g70q0jnt.apps.googleusercontent.com",
+          "client_id": "677839630280-7s5bstlevukiliqc1tmigs06n71q0c42.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.animeverse_2",
+            "package_name": "com.example.animeverse",
+            "certificate_hash": "64589381904b43e39542dbc664dd40e990d2cf0c"
+          }
+        },
+        {
+          "client_id": "677839630280-f5ri45enn04v513ea6peiv53nmc69hsf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.animeverse",
             "certificate_hash": "8bca1212c58e68719faa5ce94cc0886067c58948"
           }
         },
         {
-          "client_id": "835925278542-8uf8bssdvn1p4b1t3otgpk4s1g0ef98e.apps.googleusercontent.com",
+          "client_id": "677839630280-v4r6rdsftetnib93elb5ib9nftrggujj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAvBhRdvU6dtRY4lSK0SuXxtOERDeDrBbQ"
+          "current_key": "AIzaSyCopdW0wIofxuCosxu-_I6cxvAqepMS3W0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "835925278542-8uf8bssdvn1p4b1t3otgpk4s1g0ef98e.apps.googleusercontent.com",
+              "client_id": "677839630280-v4r6rdsftetnib93elb5ib9nftrggujj.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
