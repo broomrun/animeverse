@@ -89,13 +89,13 @@ lib/
 ---
 
 ## APIs & Services
-### **Jikan API – MyAnimeList Unofficial API**
+### **Jikan API**
 https://docs.api.jikan.moe/
 
 ### **Services**
-- Firebase Authentication
-- Cloud Firestore
-- Flutter Framework
+Firebase Authentication
+Cloud Firestore
+Flutter Framework
 
 ---
 
