@@ -41,12 +41,12 @@ Animeverse is a Flutter-based mobile application designed to help users easily d
 
 ---
 
-## Demo Aplikasi
+## Demo
 **Demo:** [here](https://youtu.be/iZh8S9fqXSA?si=NQrv6W_0D94hXBIx)
 
 ---
 
-## Struktur Proyek
+## Project Structure
 
 ```text
 lib/
@@ -101,23 +101,20 @@ https://docs.api.jikan.moe/
 
 ## Packages & Dependencies
 
-| Package                   | Versi     | Fungsi |
-|--------------------------|-----------|--------|
-| cupertino_icons          | ^1.0.8    | Icon gaya iOS |
-| flutter_svg              | ^2.2.3    | Menampilkan SVG |
-| go_router                | ^17.0.0   | Routing aplikasi |
-| shared_preferences       | ^2.5.3    | Local storage ringan |
-| provider                 | ^6.1.5+1  | State management |
-| http                     | ^1.6.0    | HTTP client |
-| cached_network_image     | ^3.4.1    | Cache gambar |
-| firebase_core            | ^4.2.1    | Core Firebase SDK |
-| firebase_auth            | ^6.1.2    | Autentikasi pengguna |
-| google_sign_in           | ^7.2.0    | Login Google |
-| cloud_firestore          | ^6.1.0    | Database Firebase |
-| flutter_launcher_icons   | ^0.14.4   | Generate app icon |
-| flutter_native_splash    | ^2.4.7    | Generate splash screen |
+| Package                    | Version  | Description                                                                                   |
+| -------------------------- | -------- | --------------------------------------------------------------------------------------------- |
+| **cupertino_icons**        | ^1.0.8   | Provides iOS-style icons for consistent design across Apple devices.                          |
+| **flutter_svg**            | ^2.2.3   | Enables rendering of SVG (Scalable Vector Graphics) images within the Flutter application.    |
+| **go_router**              | ^16.2.4  | Facilitates structured navigation and routing within the Flutter application.                 |
+| **provider**               | ^6.1.5+1 | Implements state management to efficiently manage app-wide data and reactivity.               |
+| **shared_preferences**     | ^2.5.3   | Allows storage of lightweight key-value data on the device for persistent user settings.      |
+| **http**                   | ^1.6.0   | Provides a client for making HTTP requests and handling API communication.                    |
+| **cached_network_image**   | ^3.4.1   | Efficiently downloads and caches network images to improve performance and reduce data usage. |
+| **firebase_core**          | ^4.2.1   | Initializes and integrates the core Firebase services required for the application.           |
+| **firebase_auth**          | ^6.1.2   | Provides user authentication functionalities, including email/password and social sign-ins.   |
+| **google_sign_in**         | ^7.2.0   | Allows users to authenticate via their Google account securely and conveniently.              |
+| **cloud_firestore**        | ^6.1.0   | Enables real-time cloud database management with querying, updating, and synchronization.     |
+| **flutter_launcher_icons** | ^0.14.4  | Automatically generates launcher icons for Android and iOS applications.                      |
+| **flutter_native_splash**  | ^2.4.7   | Configures and generates a native splash screen for both Android and iOS platforms.           |
+| **device_preview**         | ^1.1.0   | Simulates and previews the app on multiple device sizes and screen resolutions.               |
 
-
----
-
-## Thank You!  
