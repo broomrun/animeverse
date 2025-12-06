@@ -67,6 +67,7 @@ class FavoriteAnimeCard extends StatelessWidget {
                       child: const Icon(Icons.image_not_supported),
                     ),
                   ),
+                  SizedBox(width: screenWidth * 0.04),
 
                   // content
                   Expanded(

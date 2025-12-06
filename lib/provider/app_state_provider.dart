@@ -1,15 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:animeverse/services/firestore_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/anime.dart';
-import '../data/dummy_data.dart';
 import '../repositories/anime_repository.dart';
 
-/// Main app state provider managing favorites, filtering, and search
-/// This provider handles all anime-related state management
 class AppStateProvider extends ChangeNotifier {
-  // Favorites state
   final AnimeRepository _repository = AnimeRepository();
 
   List<Anime> _animeList = [];
@@ -23,16 +21,15 @@ class AppStateProvider extends ChangeNotifier {
   bool _isSearchMode = false;
 
   List<Anime> _favorites = [];
-  static const String _storageKey = 'favorite_anime_list';
+  final FirestoreService _firestoreService = FirestoreService();
+  StreamSubscription<List<Anime>>? _favoritesSubcription;
 
-  // Filtering state
+  // static const String _storageKey = 'favorite_anime_list';
+
   String _selectedGenre = "All";
 
-  // Search state (separated by screen)
   String _homeSearchQuery = "";
   String _favoriteSearchQuery = "";
-
-  // Getters
   Timer? _searchDebounce;
 
   List<Anime> get animeList => _animeList;
@@ -48,13 +45,36 @@ class AppStateProvider extends ChangeNotifier {
   String get favoriteSearchQuery => _favoriteSearchQuery;
 
   AppStateProvider() {
-    _loadFavorites();
+    _initAuthListener();
     fetchTopAnime();
   }
 
-  // ========== FAVORITES MANAGEMENT ==========
+  void _initAuthListener() {
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user != null) {
+        _subscribeToFavorites(user.uid);
+      } else {
+        _unsubscribeFromFavorites();
+      }
+    });
+  }
 
-  /// Load favorites from SharedPreferences
+  void _subscribeToFavorites(String userId) {
+    _favoritesSubcription?.cancel();
+    _favoritesSubcription = _firestoreService.getFavoriteStream(userId).listen((favorites) {
+      _favorites = favorites;
+      notifyListeners();
+    });
+  }
+
+  void _unsubscribeFromFavorites() {
+    _favoritesSubcription?.cancel();
+    _favorites = [];
+    notifyListeners();
+    notifyListeners();
+  }
+
+
   Future<void> fetchTopAnime({int page = 1}) async {
     _isLoading = true;
     _errorMessage = null;
@@ -134,42 +154,11 @@ class AppStateProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _loadFavorites() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final String? favoritesJson = prefs.getString(_storageKey);
 
-      if (favoritesJson != null) {
-        final List<dynamic> decoded = json.decode(favoritesJson);
-        _favorites = decoded.map((item) {
-          return Anime.fromFavoritesJson(item);
-        }).toList();
-        notifyListeners();
-      }
-    } catch (e) {
-      debugPrint('Error loading favorites: $e');
-    }
-  }
-
-  /// Save favorites to SharedPreferences
-  Future<void> _saveFavorites() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final List<Map<String, dynamic>> favoritesJson =
-      _favorites.map((anime) => anime.toJson()).toList();
-
-      await prefs.setString(_storageKey, json.encode(favoritesJson));
-    } catch (e) {
-      debugPrint('Error saving favorites: $e');
-    }
-  }
-
-  /// Check if anime is in favorites
   bool isFavorite(int malId) {
     return _favorites.any((anime) => anime.malId == malId);
   }
 
-  /// Toggle favorite status
   void toggleFavorite(Anime anime) {
     if (isFavorite(anime.malId)) {
       removeFavorite(anime.malId);
@@ -178,36 +167,27 @@ class AppStateProvider extends ChangeNotifier {
     }
   }
 
-  /// Add anime to favorites
-  void addFavorite(Anime anime) {
-    if (!isFavorite(anime.malId)) {
-      _favorites.add(anime);
-      _saveFavorites();
-      notifyListeners();
+  Future<void> addFavorite(Anime anime) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user!= null) {
+      await _firestoreService.addFavorite(user.uid, anime);
     }
   }
 
-  /// Remove anime from favorites
-  void removeFavorite(int malId) {
-    _favorites.removeWhere((anime) => anime.malId == malId);
-    _saveFavorites();
-    notifyListeners();
+  Future<void> removeFavorite(int malId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await _firestoreService.removeFavorite(user.uid, malId);
+    }
   }
 
-  /// Get favorites count
   int get favoritesCount => _favorites.length;
 
-  // ========== GENRE FILTER ==========
-
-  /// Set selected genre
   void setSelectedGenre(String genre) {
     _selectedGenre = genre;
     notifyListeners();
   }
 
-  // ========== SEARCH FUNCTIONALITY ==========
-
-  /// Set search query for HomeScreen
   void setHomeSearchQuery(String query) {
     _homeSearchQuery = query;
     notifyListeners();
@@ -223,19 +203,14 @@ class AppStateProvider extends ChangeNotifier {
     });
   }
 
-  /// Set search query for FavoriteScreen
   void setFavoriteSearchQuery(String query) {
     _favoriteSearchQuery = query;
     notifyListeners();
   }
 
-  // ========== FILTERING LOGIC ==========
-
-  /// Get filtered anime list for HomeScreen (based on genre and home search)
   List<Anime> getFilteredAnimeForHome() {
     List<Anime> result = _animeList;
 
-    // Apply genre filter
     if (_selectedGenre != "All") {
       result = result.where((anime) {
         return anime.genres.any(
@@ -244,7 +219,6 @@ class AppStateProvider extends ChangeNotifier {
       }).toList();
     }
 
-    // Apply home search filter (case-insensitive)
     if (_homeSearchQuery.isNotEmpty) {
       result = result.where((anime) {
         return anime.title.toLowerCase().contains(_homeSearchQuery.toLowerCase());
@@ -254,11 +228,9 @@ class AppStateProvider extends ChangeNotifier {
     return result;
   }
 
-  /// Get filtered favorites for FavoriteScreen (based on favorite search)
   List<Anime> getFilteredFavorites() {
     List<Anime> result = _favorites;
 
-    // Apply favorite search filter (case-insensitive)
     if (_favoriteSearchQuery.isNotEmpty) {
       result = result.where((anime) {
         return anime.title.toLowerCase().contains(_favoriteSearchQuery.toLowerCase());

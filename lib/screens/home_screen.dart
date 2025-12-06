@@ -1,9 +1,8 @@
+import 'package:animeverse/widgets/anime_view.dart';
 import 'package:animeverse/widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../provider/app_state_provider.dart';
-import '../widgets/anime_view.dart';
 import '../widgets/genre_list.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -227,9 +226,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Colors.white,
                         ),
                       ),
-
                     ),
                   ),
+
+                  // Genre List
                   GenreList(
                     selected: provider.selectedGenre,
                     onGenreSelected: (genre) {
